@@ -72,11 +72,15 @@ module Cb
       end
 
       def self.for_resume(oauth_token, resume_hash)
-        json_hash = oauth_token.get(Cb.configuration.uri_recommendation_for_resume, :query => {:resume_hash => resume_hash})
+        json_hash = oauth_token.get(resume_rec_uri(resume_hash))
         Responses::Recommendations.new(json_hash)
       end
 
       private
+
+      def self.resume_rec_uri(resume_hash)
+        Cb.configuration.base_uri + Cb.configuration.uri_recommendation_for_resume.gsub(':resume_hash', resume_hash)
+      end
 
       def self.normalize_args(args)
         return args[0] if args[0].class == Hash
